@@ -1,20 +1,20 @@
 #!/usr/bin/env python
 import os, sys, socket, easygui, threading, time, subprocess, base64, configparser, getpass
 shell = 0
+if os.path.exists("details.ini"):
+    pass
+else:
+    subprocess.call("./starter.py", shell=True)
+    sys.exit()
+config = configparser.ConfigParser()
+config.read("details.ini")
+shost = config["DEFAULT"]["server"]
+sport  = config["DEFAULT"]["sport"]
+host = config["DEFAULT"]["client"]
+port  = config["DEFAULT"]["cport"]
+name   = config["DEFAULT"]["name"]
 def main():
     try:
-        if os.path.exists("details.ini"):
-            pass
-        else:
-            subprocess.call("./starter.py", shell=True)
-            sys.exit()
-        config = configparser.ConfigParser()
-        config.read("details.ini")
-        shost = config["DEFAULT"]["server"]
-        sport  = config["DEFAULT"]["sport"]
-        host = config["DEFAULT"]["client"]
-        port  = config["DEFAULT"]["cport"]
-        name   = config["DEFAULT"]["name"]
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((host,int(port)))
         while True:
@@ -46,7 +46,6 @@ def main():
                         print("   ccd                       --change your working directory on your folders")
                         print("   cwd                       --print working directory on connected host")
                         print("   lcwd                      --print your current working directory")
-                        print("                             --and every command exists on connected host")
                         print
                         print("Commands while shell is closed")
                         print("   shell=open code=3024             --to open shell")
@@ -59,10 +58,19 @@ def main():
                     help()
                 elif shell == 1 and ans=="lcwd":
                     print(os.getcwd())
+                    main()
+                elif shell == 1 and ans=="lls":
+                    subprocess.call("ls", shell=True)
+                    main()
                 elif shell == 1 and ans=="ccd":
-                    os.chdir(ans[4:])
-                elif shell == 1 and ans=="cwd":
-                    s.send("cwd")
+                    print("Hit enter to return")
+                    f=raw_input("Path: ")
+                    if len(f) > 0:
+                        os.chdir(f)
+                    main()
+                elif shell == 1 and ans=="print cwd":
+                    s.send("print cwd")
+                    main()
                 elif ans=="shell=exit":
                     shell = 0
                     s.send("shell=exit")
@@ -81,11 +89,14 @@ def main():
 #                        subprocess.call("rm %s.ini" % ans[19], shell=True)
                 if shell == 1 and ans=="exit":
                     shell = 0
+                    s.send("shell=exit")
                 if shell == 1:
                     s.send(ans)
                 else:
                     s.send("[%s](%s): %s " % (time.strftime("%H:%M:%S"),name,ans))
                 r = s.recv(4098)
+                if "Failed to execute the command" and "shell=open code=3024" in r:
+                    show = 0
                 if "shell=open -yes" in r:
                     shell = 1
                 if "shell=closed" in r:
@@ -108,11 +119,13 @@ def main():
         print("Cant use KeyboardInterrupt. Use exit -y to exit")
         main()
     except socket.error:
-        print("Host is offline, keep trying")
+        print("socket.error < Trying to return... [Host seems offline]")
         time.sleep(5)
         main()
+        """
     except Exception, e:
         print e
-        easygui.msgbox(msg=e, title="Exception!")
+    #    easygui.msgbox(msg=e, title="Exception!")
         sys.exit()
+        """
 main()
