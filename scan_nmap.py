@@ -6,7 +6,7 @@ try:
     host = config["DEFAULT"]["host"]
     port = config["DEFAULT"]["port"]
     print host,port
-    subprocess.call("nmap -sV %s -p-%s" % (host,port), shell=True)
+    subprocess.call("nmap -sS %s -p-%s" % (host,port), shell=True)
     ans=raw_input("\nHit <enter> to exit")
 except:
     pass

@@ -6,10 +6,19 @@ def main():
         root.destroy()
     def scan_local():
         host = x1.get()
-        port = int(x2.get())
+        try:
+            port = int(x2.get())
+        except ValueError:
+            easygui.msgbox(msg="I need a max port", title="Attention!")
+            root.destroy()
+            main()
         if port > 65535:
             easygui.msgbox(msg="Max port is 65535", title="Attention!")
-            scan.destroy()
+            root.destroy()
+            main()
+        if len(host) == 0:
+            easygui.msgbox(msg="I need a host", title="Hostname Error")
+            root.destroy()
             main()
         else:
             pass
@@ -33,7 +42,7 @@ def main():
     def exit():
         scan.destroy()
     def scan_more():
-        txt="You can scan a host for open ports using 2 tools.\n1. Nmap\n2. Local port scanner using python module 'socket'==> it may show false reports"
+        txt="You can scan a host for open ports with 3 methods.\n1. Nmap (using -sS option)\n2. Local port scanner using python module 'socket'==> it may show false reports\n3. Custom command using nmap tool"
         easygui.msgbox(msg=txt, title="More ..")
     def scan_nmap():
         host = x1.get()
@@ -61,7 +70,7 @@ def main():
     start.add_separator()
     start.add_command(label="Scan using project's local tool", command=scan_local)
     start.add_separator()
-    start.add_command(label="Scan using nmap", command=scan_nmap)
+    start.add_command(label="Scan using nmap (-sS)", command=scan_nmap)
     start.add_separator()
     menubar.add_cascade(label="Start", menu=start)
     more = Menu(menubar, tearoff=0)

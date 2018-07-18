@@ -79,11 +79,10 @@ def main():
 #                        file.close()
 #                        s.send("file=upload text=%s" % f)
 #                        subprocess.call("rm %s.ini" % ans[19], shell=True)
-                elif ans=="exit" and shell == 1:
+                if shell == 1 and ans=="exit":
                     shell = 0
                 if shell == 1:
                     s.send(ans)
-
                 else:
                     s.send("[%s](%s): %s " % (time.strftime("%H:%M:%S"),name,ans))
                 r = s.recv(4098)
