@@ -1,4 +1,4 @@
 # webserver
-Python Based server and client, for messages and shell opening
-Working with Tkinter
-file upload download currently unavailable
+Python based server and client, for messages and shell opening
+\nWorking with Tkinter
+\nfile upload download currently unavailable
