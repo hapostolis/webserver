@@ -1,4 +1,4 @@
 # webserver
 Python based server and client, for messages and shell opening
-\nWorking with Tkinter
-\nfile upload download currently unavailable
+<p>Working with Tkinter</p>
+<p>file upload download currently unavailable</p>
