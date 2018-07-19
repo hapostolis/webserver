@@ -38,9 +38,7 @@ def server():
                     shell = 1
                 else:
                     shell = 0
-                    client.send("Permission denied!")
-            if "shell=open code=3024" in r and shell==1:
-                client.send("Shell is already opened!")
+                    client.send("\033[91mPermission denied!\033[0m")
             #if "shell=open ask=no pass=a2542002" in r:
             #    shell=1
             #    client.send("noask")
@@ -57,17 +55,20 @@ def server():
                 if not "shell=open code=3024" in l:
                     client.send(l + '\n\033[0m.....................')
             if shell == 1 and "cd " in r:
-                os.chdir(r[3:])
-                print r + " [%s]" % os.getcwd()
+                try:
+                    os.chdir(r[3:])
+                    print r + " [%s]" % os.getcwd()
+                except OSError:
+                    print("Can not cd to %s" % r[3:])
             print r
-            if shell == 1:
-                time.sleep(3)
-                file = open("shell_check.txt", "r")
-                fi = file.read()
-                if "yes" in fi:
-                    shell = 0
-                    client.send("shell=closed")
-                file.close()
+            #if shell == 1:
+            #    time.sleep(3)
+            #    file = open("shell_check.txt", "r")
+            #    fi = file.read()
+            #    if "yes" in fi:
+            #        shell = 0
+            #        client.send("shell=closed")
+            #    file.close()
             #else:
                 #print r
             file=open("server_log.txt", "a")

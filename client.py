@@ -99,20 +99,14 @@ def main():
                     show = 0
                 if "shell=open -yes" in r:
                     shell = 1
-                if "shell=closed" in r:
-                    shell = 0
-                    txt = "\033[0mSend message: "
+                #if "shell=closed" in r:
+                #    shell = 0
+                #    txt = "\033[0mSend message: "
                 if "noask" in r:
                     shell = 1
                 else:
                     if r:
                         print(r)
-                    else:
-                        if shell == 1:
-                            print("\033[91mShell closed\033[0m")
-                        shell = 0
-                    #if not "1" in r:
-                    #    print(time.strftime("%H:%M:%S"),r)
                 main()
             send_message()
     except KeyboardInterrupt:
